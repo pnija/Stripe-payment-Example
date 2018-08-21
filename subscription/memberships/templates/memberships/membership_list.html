@@ -1,0 +1,46 @@
+{% extends 'memberships/base.html' %}
+
+
+{% block content %}
+<div class="row text-center">
+<h1 id="color">Select a membership</h1>
+</div>
+
+<div class="container">
+	<div class="row">
+		{% for object in object_list %}
+			<div class="col-sm-4 col-md-4">
+			   <div class="panel panel-primary">
+					<div class="panel-heading">
+						<h2>{{ object.membership_type }}</h2>
+					</div>
+					<div class="panel-body">
+					  <h5 class="panel-title">Price: {{ object.price }}<small>Monthly</small></h5>
+					  <h5>Included Courses</h5>
+					  <ul>
+							{% for course in object.course_set.all %}
+							<li class="card-text">{{ course.title }}</li>
+							{% endfor %}
+					  </ul>
+					  {% if object.membership_type != 'Free' %}
+			<form method="POST" action="{% url 'memberships:select' %}">
+				{% csrf_token %}
+				{% if object.membership_type != current_membership %}
+					<button class="btn btn-success">Select</button>
+				{% else %}
+					<small>This is your current membership</small>
+				{% endif %}
+				<input type="hidden" name="membership_type" value="{{ object.membership_type }}">
+			</form>
+			{% endif %}
+
+					</div>
+				  </div>
+				</div>
+			{% endfor %}
+	</div>
+</div>
+
+
+
+{% endblock content %}
